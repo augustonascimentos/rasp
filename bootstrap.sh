@@ -7,8 +7,8 @@
 SD="/dev/mmcblk0"
 
 #Desmontando partições, caso haja
-umount -f /dev/mmcblk0p1
-umount -f /dev/mmcblk0p2
+umount -fv /dev/mmcblk0p1
+umount -fv /dev/mmcblk0p2
 
 #Sequencia de parâmetros para o fdisk
 echo "o
@@ -29,25 +29,28 @@ w
 "|fdisk $SD
 
 #Formatando as partições
-mkfs.vfat -F /dev/mmcblk0p1
-mkfs.ext4 -F /dev/mmcblk0p2
+mkfs.vfat -Fv /dev/mmcblk0p1
+mkfs.ext4 -Fv /dev/mmcblk0p2
 
 #Criando diretórios boot e root
 mkdir -p boot root
 
 #Motando o sd nos diretórios
-mount /dev/mmcblk0p1 boot
-mount /dev/mmcblk0p2 root
+mount -v /dev/mmcblk0p1 boot
+mount -v /dev/mmcblk0p2 root
 
 #Download da imagem
-wget http://os.archlinuxarm.org/os/ArchLinuxARM-rpi-2-latest.tar.gz
+#wget http://os.archlinuxarm.org/os/ArchLinuxARM-rpi-2-latest.tar.gz
 
 #Extraindo os arquivos da imagem
 bsdtar -xvpf ArchLinuxARM-rpi-2-latest.tar.gz -C root
-
+sync
 #Movendo os arquivos para o diretório boot
-mv root/boot/* boot
+mv -v root/boot/* boot
 
 #Desmontando root e boot
-umount root boot
-rm -rf boot root
+#umount -v boot root
+umount -v boot
+umount -v root
+rm -rf -v boot root
+echo "SRCIPT FINALIZADO!"
