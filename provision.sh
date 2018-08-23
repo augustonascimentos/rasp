@@ -47,4 +47,5 @@ pacman -S --noconfirm chromium
 # Desabilitando os usuarios padroes do Raspberry
 
 # Resetando o sistema para carregar todas a configuracoes
+#
 reboot
