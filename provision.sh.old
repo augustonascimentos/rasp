@@ -9,7 +9,7 @@ pacman-key --populate archlinuxarm
 pacman -Syu --noconfirm
 
 # Instalando os pacotes basicos
-pacman -S --noconfirm base-devel sudo wget
+pacman -S --noconfirm base-devel sudo
 
 # Definindo o Hostname do Equipamento
 echo Digite o Hostname do equipamento:
@@ -29,12 +29,10 @@ useradd -m -g users -G wheel -s /bin/bash build
 sed -i -e 's/#%wheel ALL=(ALL) NOPASSWD: ALL/%wheel ALL=(ALL) NOPASSWD: ALL/g' /etc/sudoers
 
 # Instalando o X Server
-pacman -S --noconfirm xorg-server xorg-xinit xorg-xrandr
+pacman -S --noconfirm xorg-server xorg-xinit
 
 # Instalando o Docker Engine
 pacman -S --noconfirm docker
-
-# Adicionar o usu√rio build no /etc/sudores
 
 # Download XLOGIN
 wget https://aur.archlinux.org/cgit/aur.git/plain/PKGBUILD?h=xlogin-git -O PKGBUILD
