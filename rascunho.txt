@@ -1,0 +1,49 @@
+#Xgor pacotes
+pacman -S xorg-server xorg-xinit
+
+#Driver de vídeo do raspberry
+pacman -S xf86-video-fbdev dbus
+
+#configurar o auto login
+
+
+#Instalar o xorg-xrandr
+pacman -S xorg-xrandr
+
+#instalar pra retirar o cursor do mouse
+pacman -S unclutter
+#colocar no arquivo .xinit
+unclutter &
+
+
+Add Users To sudoers
+I chose to add the 2 users to the sudoers file so I wouldn’t get prompted for passwords all the time. Run visudo and at the bottom add
+
+1
+2
+kiosk ALL=(ALL) NOPASSWD: ALL
+obrienlabs ALL=(ALL) NOPASSWD: ALL
+Install Required Packages
+We’ll need to install some software to accomplish this.
+
+Chromium is the Chrome browser but with much more options.
+Unclutter removes the mouse cursor from the screen, giving it a clean look.
+xdotool can manipulate on screen elements using a virtual keyboard. We use it to change tabs in Chromium.
+1
+sudo apt-get install -y chromium-browser unclutter xdotool
+
+https://obrienlabs.net/setup-kiosk-ubuntu-chromium/
+I did a Google search and found this answer. https://askubuntu.com/a/997130/802852. For example if you wanted to zoom to 79% add that line to the /usr/bin/chromium-browser section of the script.
+
+The full line would be /usr/bin/chromium-browser --window-size=1920,1080 --kiosk --window-position=0,0 --force-device-scale-factor=0.79 http://google.com http://bing.com &
+https://obrienlabs.net/setup-kiosk-ubuntu-chromium/
+Virtual console
+Note: It has been reported that this method may interfere with the hibernating process.
+Edit the provided unit either manually by creating the following drop-in snippet, or by running systemctl edit getty@tty1 and pasting its content:
+
+/etc/systemd/system/getty@tty1.service.d/override.conf
+[Service]
+ExecStart=
+ExecStart=-/usr/bin/agetty --autologin username --noclear %I $TERM
+https://wiki.archlinux.org/index.php/Getty#Automatic_login_to_virtual_console
+https://peter.sh/experiments/chromium-command-line-switches/
