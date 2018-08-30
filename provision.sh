@@ -9,45 +9,46 @@ pacman-key --populate archlinuxarm
 pacman -Syu --noconfirm
 
 # Instalando os pacotes basicos
-pacman -S --noconfirm base-devel sudo wget
+pacman -S --noconfirm base-devel sudo wget git
 
-# Definindo o Hostname do Equipamento
-echo Digite o Hostname do equipamento:
-read hostname
-echo $hostname > /etc/hostname
-echo O Hostname $hostname foi definido com sucesso!
-
-# Liberando o acesso via SSH e bloquando acesso como root
+# Liberando o acesso via SSH
 sed -i -e 's/#Port 22/Port 22/g' /etc/ssh/sshd_config
 sed -i -e 's/#AddressFamily any/AddressFamily any/g' /etc/ssh/sshd_config
 sed -i -e 's/#ListenAddress 0.0.0.0/ListenAddress 0.0.0.0/g' /etc/ssh/sshd_config
+sed -i -e 's/#ListenAddress 0.0.0.0/ListenAddress 0.0.0.0/g' /etc/ssh/sshd_config
+sed -i -e 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/g' /etc/ssh/sshd_config
+sed -i -e 's/#PermitRootLogin/PermitRootLogin/g' /etc/sudoers
+echo 'alarm ALL=(ALL) ALL' | sudo EDITOR='tee -a' visudo
 
 #Criando Usuario Padrão
-useradd -m -g users -G wheel -s /bin/bash build
+useradd -m -g users -G wheel -s /bin/bash chromium
 
-# Delegando permissões para o usuário build
-sed -i -e 's/#%wheel ALL=(ALL) NOPASSWD: ALL/%wheel ALL=(ALL) NOPASSWD: ALL/g' /etc/sudoers
+# Delegando permissões para o usuário chromium
+sed -i -e 's/# %wheel ALL=(ALL) NOPASSWD: ALL/%wheel ALL=(ALL) NOPASSWD: ALL/g' /etc/sudoers
 
 # Instalando o X Server
-pacman -S --noconfirm xorg-server xorg-xinit xorg-xrandr
+pacman -S --noconfirm xorg-server xorg-xinit xorg-xrandr xf86-video-fbdev xorg-twm xorg-clock xterm
 
 # Instalando o Docker Engine
 pacman -S --noconfirm docker
 
-# Adicionar o usu�rio build no /etc/sudores
-
-# Download XLOGIN
-wget https://aur.archlinux.org/cgit/aur.git/plain/PKGBUILD?h=xlogin-git -O PKGBUILD
-
-# Montando o XLOGIN
-cd /home/build
-sudo -u build makepkg -si
-
 # Instalando o Chromium
-pacman -S --noconfirm chromium
+pacman -S --noconfirm chromium unclutter xdotool
 
-# Desabilitando os usuarios padroes do Raspberry
+# Desabilitando root login
+passwd -l root
+
+# Desabilitando os usuario padrão(alarm) do Raspberry 
+#sudo userdel alarm
+
+# Configurando o auto loging
+#systemctl start getty@tty1.service
+#systemctl edit getty@tty1
+
+#[Service]
+#ExecStart=
+#ExecStart=-/usr/bin/agetty --autologin build --noclear %I $TERM
+
 
 # Resetando o sistema para carregar todas a configuracoes
-#
 reboot
